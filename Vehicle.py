@@ -33,14 +33,31 @@ class Vehicle:
         # return corresponding results
         return collect_number_plates
 
-    def get_number_of_vehicles(self, number_plate_a, number_plate_b):
+    def number_of_vehicles(self, number_plate_a, number_plate_b):
         characters = sorted(set(string.ascii_letters.lower()))
-        # map characters to the numeric equivalent in integers
-        maped_characters = dict(zip(characters, [ord(character) % 32 for character in characters]))
-        number_plate_characters_a = ''.join(re.findall("[a-zA-Z]+", number_plate_a, re.M | re.I))
-        number_plate_characters_b = ''.join(re.findall("[a-zA-Z]+", number_plate_b, re.M | re.I))
 
-        # number_plate_a_digits=re.findall("\d+", number_plate_a.lower)
-        list_a = [maped_characters[c] for c in number_plate_characters_a]
-        list_b = [maped_characters[c] for c in number_plate_characters_b]
-        return list_a, list_b
+        if number_plate_a == number_plate_b:
+            return 0
+        else:
+            # map characters to the numeric equivalent in integers
+            maped_characters = dict(zip(characters, [ord(character) % 32 for character in characters]))
+            number_plate_characters_a = self.plate_characters(number_plate_a)
+            number_plate_characters_b = self.plate_characters(number_plate_b)
+            number_plate_digits_a = self.plate_digits(number_plate_a)
+            number_plate_digits_b = self.plate_digits(number_plate_b)
+
+            # number_plate_a_digits=re.findall("\d+", number_plate_a.lower)
+            list_a = [maped_characters[c] for c in number_plate_characters_a]
+            list_b = [maped_characters[c] for c in number_plate_characters_b]
+            diff = [x1 - x2 for (x1, x2) in zip(list_a, list_b)]
+            multiplying_factors = [0, 675324, 25974, 999]
+            difm = [x1 * x2 for (x1, x2) in zip(diff, multiplying_factors)]
+            carsx = difm[3] - int(number_plate_digits_b) + int(number_plate_digits_a) - 1
+            number = difm[1] - difm[2] - carsx
+            return number, diff, list_a, list_b
+
+    def plate_characters(self, number_plate):
+        return ''.join(re.findall("[a-zA-Z]+", number_plate, re.M | re.I))
+
+    def plate_digits(self, number_plate):
+        return ''.join(re.findall("\d{3}", number_plate, re.M | re.I))
