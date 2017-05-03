@@ -6,7 +6,8 @@ class Vehicle:
     def __init__(self):
         pass
 
-    def get_number_plate(self, sentence):
+    @staticmethod
+    def get_number_plate(sentence):
         """
             Return kenyan number plates in a given sentence
             :param sentence: A string to extract number plates
