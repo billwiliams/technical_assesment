@@ -35,8 +35,18 @@ class Vehicle:
         return collect_number_plates
 
     def number_of_vehicles(self, number_plate_a, number_plate_b):
+        """
+                    Return number of vehicles within the given plates
+                    :param number_plate_a: A number plate string
+                    :param number_plate_b: A number plate string
+                    :type number_plate_a: str
+                    :type number_plate_b: str
+                    :returns: number of vehicles between the given plates
+                    :rtype: int
+                    """
         number_plate_a = number_plate_a.lower()
         number_plate_b = number_plate_b.lower()
+        # check if the number plates are the same and return 0
         if number_plate_a.replace(" ", "") == number_plate_b.replace(" ", ""):
             return 0
         else:
@@ -51,18 +61,28 @@ class Vehicle:
             # change the character part into number to compute changes
             list_a = [mapped_characters[c] for c in number_plate_characters_a]
             list_b = [mapped_characters[c] for c in number_plate_characters_b]
-            # get the difference in the number plates
-            diff = [x1 - x2 for (x1, x2) in zip(list_a, list_b)]
+
             # These are factors that we multiply with depending on the placement of the changed character
             multiplying_factors = [0, 675324, 25974, 999]
-            # we multiply the difference with the factors to obtain the respective changes when we wiggle a character
-            character_change_values = [x1 * x2 for (x1, x2) in zip(diff, multiplying_factors)]
-            # we calculate the changes in the digit part and last character
-            digit_changes = character_change_values[3] - int(number_plate_digits_b) + int(number_plate_digits_a) - 1
-            number_of_cars = character_change_values[1] - character_change_values[2] - digit_changes
-            if number_of_cars < 1:
-                return -number_of_cars
-            return number_of_cars
+            # get the total number of vehicles in  each character of the number plate
+            plate_a_total_vehicles = self.vehicles_in_a_number_plate(list_a, multiplying_factors)
+            plate_b_total_vehicles = self.vehicles_in_a_number_plate(list_b, multiplying_factors)
+
+            # since from KC->KB there are 675324 we subtract the other values to get actual vehicles
+            plate_a_vehicles = plate_a_total_vehicles[1] - plate_a_total_vehicles[2] - plate_a_total_vehicles[3] - int(
+                number_plate_digits_a)
+            plate_b_vehicles = plate_b_total_vehicles[1] - plate_b_total_vehicles[2] - plate_b_total_vehicles[3] - int(
+                number_plate_digits_b)
+
+            # since the number plates can be entered in any order, we check the largest and subtract from the smallest
+            # then subtract 1 since we don't  want to include the plate we are checking
+            if plate_a_vehicles > plate_b_vehicles:
+                return plate_a_vehicles - plate_b_vehicles - 1
+            return plate_b_vehicles - plate_a_vehicles - 1
+
+    @staticmethod
+    def vehicles_in_a_number_plate(list_a, multiplying_factors):
+        return [x1 * x2 for (x1, x2) in zip(list_a, multiplying_factors)]
 
     @staticmethod
     def plate_characters(number_plate):
