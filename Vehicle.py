@@ -23,12 +23,17 @@ class Vehicle:
         pattern = 'K[a-z]{2}\d{3}[a-z]{1}|K[a-z]{2}\s+\d{3}[a-z]{1}'
 
         # find all the matched instances of the pattern ignoring the case and including mulltiline string
-        result = re.findall(pattern, sentence, re.M | re.I)
+        number_plates = re.findall(pattern, sentence, re.M | re.I)
+
+        # check if result has 000 in digit part since only from 001 is allowed
+
+        collect_number_plates = [number_plate for number_plate in number_plates if
+                                 (re.findall('\d{3}', number_plate, re.M | re.I) != ['000'])]
 
         # return corresponding results
-        return result
+        return collect_number_plates
 
-    def get_number_of_vehicles(self, number_plate_a,number_plate_b):
+    def get_number_of_vehicles(self, number_plate_a, number_plate_b):
         characters = sorted(set(string.ascii_letters.lower()))
         # map characters to the numeric equivalent in integers
         maped_characters = dict(zip(characters, [ord(character) % 32 for character in characters]))
@@ -36,6 +41,6 @@ class Vehicle:
         number_plate_characters_b = ''.join(re.findall("[a-zA-Z]+", number_plate_b, re.M | re.I))
 
         # number_plate_a_digits=re.findall("\d+", number_plate_a.lower)
-        list_a=[maped_characters[c] for c in number_plate_characters_a]
+        list_a = [maped_characters[c] for c in number_plate_characters_a]
         list_b = [maped_characters[c] for c in number_plate_characters_b]
-        return list_a,list_b
+        return list_a, list_b
