@@ -43,9 +43,14 @@ class Vehicle:
                     :type number_plate_b: str
                     :returns: number of vehicles between the given plates
                     :rtype: int
-                    """
+        """
+        # Assert authenticity of  number plates given
+        assert self.get_number_plate(number_plate_a), "Please pass a valid Kenyan number plate"
+        assert self.get_number_plate(number_plate_b), "Please pass a valid Kenyan number plate"
+
         number_plate_a = number_plate_a.lower()
         number_plate_b = number_plate_b.lower()
+
         # check if the number plates are the same and return 0
         if number_plate_a.replace(" ", "") == number_plate_b.replace(" ", ""):
             return 0
@@ -82,12 +87,35 @@ class Vehicle:
 
     @staticmethod
     def vehicles_in_a_number_plate(list_a, multiplying_factors):
+        """
+        Return number of vehicles within the given plates
+            :param list_a: A list of numbers
+            :param multiplying_factors: a list of numbers
+            :type list_a: list
+            :type multiplying_factors: list
+            :returns: a list with number of vehicles per number plate character
+            :rtype: list
+        """
         return [x1 * x2 for (x1, x2) in zip(list_a, multiplying_factors)]
 
     @staticmethod
     def plate_characters(number_plate):
+        """
+            Return characters in a number plate
+            :param number_plate: A list of numbers
+            :type number_plate: list
+            :returns: a list of characters in a number plate
+            :rtype: list
+        """
         return ''.join(re.findall("[a-zA-Z]+", number_plate, re.M | re.I))
 
     @staticmethod
     def plate_digits(number_plate):
+        """
+                Return characters in a number plate
+                :param number_plate: A list of string
+                :type number_plate: list
+                :returns: a list of  digits in  a number plate
+                :rtype: list
+        """
         return ''.join(re.findall("\d{3}", number_plate, re.M | re.I))
