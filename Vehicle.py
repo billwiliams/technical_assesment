@@ -1,4 +1,5 @@
 import re
+import string
 
 
 class Vehicle:
@@ -26,3 +27,15 @@ class Vehicle:
 
         # return corresponding results
         return result
+
+    def get_number_of_vehicles(self, number_plate_a,number_plate_b):
+        characters = sorted(set(string.ascii_letters.lower()))
+        # map characters to the numeric equivalent in integers
+        maped_characters = dict(zip(characters, [ord(character) % 32 for character in characters]))
+        number_plate_characters_a = ''.join(re.findall("[a-zA-Z]+", number_plate_a, re.M | re.I))
+        number_plate_characters_b = ''.join(re.findall("[a-zA-Z]+", number_plate_b, re.M | re.I))
+
+        # number_plate_a_digits=re.findall("\d+", number_plate_a.lower)
+        list_a=[maped_characters[c] for c in number_plate_characters_a]
+        list_b = [maped_characters[c] for c in number_plate_characters_b]
+        return list_a,list_b
