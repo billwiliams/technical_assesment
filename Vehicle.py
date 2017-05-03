@@ -19,7 +19,7 @@ class Vehicle:
         # pattern to match the number plates start with a K followed by 2 alphabetic letters followed by 3 digits then a
         # single alphabetic letter. the first part can also be separated by a single or multiple spaces
 
-        pattern = 'K[a-z]{2}\d{3}[a-z]{1}|K[a-z]{2}\s+\d{3}[a-z]{1}'
+        pattern = 'K[a-z]{2}\d{2}[1-9]{1}[a-z]{1}|K[a-z]{2}\s+\d{2}[1-9]{1}[a-z]{1}'
 
         # find all the matched instances of the pattern ignoring the case and including mulltiline string
         result = re.findall(pattern, sentence, re.M | re.I)
